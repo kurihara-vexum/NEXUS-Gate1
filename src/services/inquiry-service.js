@@ -1,4 +1,4 @@
-import { assertAssigneeChangeAllowed } from "../domain/assignee-policy.js";
+import { assertAssigneeChangeAllowed, getAssigneePermissions } from "../domain/assignee-policy.js";
 import { canTransition, getAllowedTransitions, getDisplayTransitions, statusLabel } from "../domain/status.js";
 import { BusinessError, MESSAGES } from "../domain/messages.js";
 
@@ -80,6 +80,7 @@ export function getInquiryDetail(db, inquiryId, actorId) {
     histories,
     allowedTransitions: getAllowedTransitions(inquiry.status),
     displayTransitions: getDisplayTransitions(inquiry.status),
+    assigneePermissions: getAssigneePermissions({ inquiry, actor }),
   };
 }
 

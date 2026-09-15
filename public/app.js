@@ -18,6 +18,8 @@ let detail;
 
 const elements = {
   message: document.querySelector("#message"),
+  actorName: document.querySelector("#actor-name"),
+  actorRole: document.querySelector("#actor-role"),
   title: document.querySelector("#title"),
   requester: document.querySelector("#requester"),
   priority: document.querySelector("#priority"),
@@ -84,24 +86,30 @@ function renderStatus() {
 }
 
 function renderAssignee() {
-  const { actor, inquiry, users } = detail;
+  const { actor, inquiry, users, assigneePermissions } = detail;
   elements.currentAssignee.textContent = inquiry.assignee_name ?? "未割り当て";
   elements.assignee.replaceChildren();
 
-  if (actor.role === "ADMIN") {
+  if (assigneePermissions.canClear) {
     const option = new Option("未割り当て", "");
     elements.assignee.add(option);
   }
 
-  const visibleUsers = actor.role === "MEMBER" ? users.filter((user) => user.id === actor.id) : users;
+  const visibleUsers = assigneePermissions.allowedUserIds == null
+    ? users
+    : users.filter((user) => assigneePermissions.allowedUserIds.includes(user.id));
   visibleUsers.forEach((user) => elements.assignee.add(new Option(user.name, user.id)));
-  elements.assignee.value = inquiry.assignee_id == null ? "" : String(inquiry.assignee_id);
+  if (inquiry.assignee_id != null && !visibleUsers.some((user) => user.id === inquiry.assignee_id)) {
+    elements.assignee.add(new Option(inquiry.assignee_name, inquiry.assignee_id));
+  }
+  elements.assignee.value = inquiry.assignee_id == null && assigneePermissions.canClear
+    ? ""
+    : String(inquiry.assignee_id ?? actor.id);
 
-  const memberWithAssignee = actor.role === "MEMBER" && inquiry.assignee_id != null;
-  const disabled = inquiry.status === "DONE" || memberWithAssignee;
-  elements.assigneeButton.disabled = disabled;
-  elements.assignee.disabled = disabled;
-  elements.assigneeGuidance.hidden = !memberWithAssignee;
+  elements.assigneeButton.disabled = !assigneePermissions.canChange;
+  elements.assignee.disabled = !assigneePermissions.canChange;
+  elements.assigneeGuidance.textContent = assigneePermissions.guidance ?? "";
+  elements.assigneeGuidance.hidden = !assigneePermissions.guidance;
 }
 
 function renderHistory() {
@@ -138,7 +146,9 @@ function renderHistory() {
 }
 
 function render() {
-  const { inquiry } = detail;
+  const { actor, inquiry } = detail;
+  elements.actorName.textContent = actor.name;
+  elements.actorRole.textContent = actor.role;
   elements.title.textContent = inquiry.title;
   elements.requester.textContent = inquiry.requester_name;
   elements.body.textContent = inquiry.body;
