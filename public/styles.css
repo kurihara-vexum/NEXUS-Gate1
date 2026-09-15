@@ -50,6 +50,9 @@ h2 { margin: 0; font-size: 19px; }
 
 .back-link { color: var(--navy); font-weight: 700; text-underline-offset: 4px; }
 .header-actions { display: flex; align-items: center; gap: 22px; }
+.reset-button { padding: 8px 12px; border: 1px solid #d5a6a1; border-radius: 8px; color: #8f2e25; background: #fff; font: 700 12px/1.2 inherit; cursor: pointer; }
+.reset-button:hover { background: var(--red-bg); }
+.reset-button:disabled { cursor: wait; opacity: .55; }
 .login-user { display: grid; grid-template-columns: auto auto; align-items: center; gap: 1px 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 9px; background: #fff; }
 .login-user span { grid-column: 1 / -1; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .06em; }
 .login-user strong { font-size: 13px; }

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { createDatabase } from "../src/db.js";
+import { createDatabase, resetDatabase } from "../src/db.js";
 import { MESSAGES } from "../src/domain/messages.js";
 import { getAllowedTransitions } from "../src/domain/status.js";
 import { changeAssignee, changeStatus, getInquiryDetail } from "../src/services/inquiry-service.js";
@@ -237,4 +237,26 @@ test("履歴登録が失敗した場合は本体更新もロールバックす�
   const after = getInquiryDetail(db, 2, 2);
   assert.equal(after.inquiry.status, "IN_PROGRESS");
   assert.equal(after.inquiry.updated_at, before.inquiry.updated_at);
+});
+
+test("リセットすると全ロールから同じ初期状態を参照できる", () => {
+  const db = setup();
+  const before = getInquiryDetail(db, 1, 2);
+  changeStatus(db, {
+    inquiryId: 1,
+    actorId: 2,
+    nextStatus: "IN_PROGRESS",
+    expectedUpdatedAt: before.inquiry.updated_at,
+  });
+  assert.equal(getInquiryDetail(db, 1, 2).inquiry.status, "IN_PROGRESS");
+
+  resetDatabase(db);
+
+  const memberView = getInquiryDetail(db, 1, 2);
+  const adminView = getInquiryDetail(db, 1, 1);
+  for (const view of [memberView, adminView]) {
+    assert.equal(view.inquiry.status, "NEW");
+    assert.equal(view.inquiry.assignee_id, null);
+    assert.equal(view.histories.length, 0);
+  }
 });

@@ -73,3 +73,19 @@ export function seedDatabase(db) {
   }
 }
 
+export function resetDatabase(db) {
+  db.exec("BEGIN IMMEDIATE");
+  try {
+    db.exec(`
+      DELETE FROM inquiry_histories;
+      DELETE FROM inquiries;
+      DELETE FROM users;
+      DELETE FROM sqlite_sequence;
+    `);
+    db.exec("COMMIT");
+  } catch (error) {
+    db.exec("ROLLBACK");
+    throw error;
+  }
+  seedDatabase(db);
+}
