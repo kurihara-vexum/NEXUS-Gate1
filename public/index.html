@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>問い合わせ詳細 | NEXUS</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">INFORMATION SYSTEMS</p>
+          <h1>問い合わせ詳細</h1>
+        </div>
+        <a href="#" class="back-link" aria-label="問い合わせ一覧に戻る">一覧に戻る</a>
+      </header>
+
+      <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+
+      <section class="card summary-card" aria-labelledby="summary-title">
+        <div class="section-heading">
+          <span class="section-number">01</span>
+          <h2 id="summary-title">問い合わせ内容</h2>
+        </div>
+        <dl class="summary-grid">
+          <div class="summary-main"><dt>件名</dt><dd id="title">—</dd></div>
+          <div><dt>依頼者</dt><dd id="requester">—</dd></div>
+          <div><dt>優先度</dt><dd><span id="priority" class="priority">—</span></dd></div>
+          <div><dt>登録日</dt><dd id="created-at">—</dd></div>
+          <div class="summary-main"><dt>本文</dt><dd id="body">—</dd></div>
+        </dl>
+      </section>
+
+      <div class="action-grid">
+        <section id="status-section" class="card" aria-labelledby="status-title">
+          <div class="section-heading">
+            <span class="section-number">02</span>
+            <h2 id="status-title">ステータス変更</h2>
+          </div>
+          <p class="current-value">現在 <strong id="current-status">—</strong></p>
+          <form id="status-form">
+            <fieldset>
+              <legend>変更先</legend>
+              <div id="status-options" class="radio-group"></div>
+            </fieldset>
+            <label class="field-label" for="comment">コメント <span>任意・200字以内</span></label>
+            <textarea id="comment" name="comment" maxlength="200" rows="4"></textarea>
+            <div class="form-footer">
+              <span id="comment-count">0 / 200</span>
+              <button type="submit" class="button primary">ステータスを変更</button>
+            </div>
+          </form>
+        </section>
+
+        <section id="assignee-section" class="card" aria-labelledby="assignee-title">
+          <div class="section-heading">
+            <span class="section-number">03</span>
+            <h2 id="assignee-title">担当者割り当て</h2>
+          </div>
+          <p class="current-value">現在 <strong id="current-assignee">—</strong></p>
+          <form id="assignee-form">
+            <label class="field-label" for="assignee">変更先</label>
+            <select id="assignee" name="assignee"></select>
+            <p id="assignee-guidance" class="guidance" hidden>担当者の変更は管理者に依頼してください</p>
+            <div class="form-footer align-right">
+              <button id="assignee-button" type="submit" class="button secondary">担当者を変更</button>
+            </div>
+          </form>
+        </section>
+      </div>
+
+      <section class="card" aria-labelledby="history-title">
+        <div class="section-heading">
+          <span class="section-number">04</span>
+          <h2 id="history-title">変更履歴</h2>
+          <span class="section-note">新しい順・最大20件</span>
+        </div>
+        <div id="history-list" class="history-list"></div>
+      </section>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>
+
