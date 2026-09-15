@@ -2,7 +2,7 @@ import http from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createDatabase } from "./db.js";
+import { createDatabase, resetDatabase } from "./db.js";
 import { BusinessError } from "./domain/messages.js";
 import { changeAssignee, changeStatus, getInquiryDetail } from "./services/inquiry-service.js";
 
@@ -50,6 +50,11 @@ const server = http.createServer(async (request, response) => {
     const detailMatch = url.pathname.match(/^\/api\/inquiries\/(\d+)$/);
     const statusMatch = url.pathname.match(/^\/api\/inquiries\/(\d+)\/status$/);
     const assigneeMatch = url.pathname.match(/^\/api\/inquiries\/(\d+)\/assignee$/);
+
+    if (request.method === "POST" && url.pathname === "/api/reset") {
+      resetDatabase(db);
+      return sendJson(response, 200, { message: "確認用データを初期状態に戻しました。" });
+    }
 
     if (request.method === "GET" && detailMatch) {
       const actorId = Number(url.searchParams.get("actorId") ?? 2);

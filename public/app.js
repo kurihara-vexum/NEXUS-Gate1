@@ -15,9 +15,11 @@ const pathMatch = location.pathname.match(/\/inquiries\/(\d+)/);
 const inquiryId = Number(pathMatch?.[1] ?? 1);
 const actorId = Number(new URLSearchParams(location.search).get("actorId") ?? 2);
 let detail;
+const resetChannel = new BroadcastChannel("nexus-inquiry-reset");
 
 const elements = {
   message: document.querySelector("#message"),
+  resetButton: document.querySelector("#reset-button"),
   actorName: document.querySelector("#actor-name"),
   actorRole: document.querySelector("#actor-role"),
   title: document.querySelector("#title"),
@@ -208,6 +210,27 @@ elements.assigneeForm.addEventListener("submit", async (event) => {
   } catch (error) {
     showMessage(error.message, "error");
   }
+});
+
+elements.resetButton.addEventListener("click", async () => {
+  if (!window.confirm("問い合わせ・担当者・変更履歴を初期状態に戻します。よろしいですか？")) return;
+  elements.resetButton.disabled = true;
+  try {
+    const result = await request("/api/reset", { method: "POST" });
+    await load();
+    resetChannel.postMessage("reset");
+    showMessage(result.message, "success");
+  } catch (error) {
+    showMessage(error.message, "error");
+  } finally {
+    elements.resetButton.disabled = false;
+  }
+});
+
+resetChannel.addEventListener("message", async (event) => {
+  if (event.data !== "reset") return;
+  await load();
+  showMessage("確認用データを初期状態に戻しました。", "success");
 });
 
 load();
