@@ -56,14 +56,14 @@ npm test
 
 その他の状態は次のURLで確認できます。
 
-- 対応中：`http://localhost:3000/inquiries/2?actorId=1`
+- 対応中：`http://localhost:3000/inquiries/1?actorId=1`
   - 「保留」または「完了」に変更できる
-  - 「完了」にすると `closed_at` に現在日時が保存される（画面には表示せず、`http://localhost:3000/api/inquiries/2?actorId=1` のJSONで確認する）
-- 保留：`http://localhost:3000/inquiries/3?actorId=2`
+  - 「完了」にすると `closed_at` に現在日時が保存される（画面には表示せず、`http://localhost:3000/inquiries/1?actorId=1` のJSONで確認する）
+- 保留：`http://localhost:3000/inquiries/1?actorId=2`
   - 変更先には「対応中」だけが表示され、「完了」は表示されない
-- 完了：`http://localhost:3000/inquiries/4?actorId=1`
+- 完了：`http://localhost:3000/inquiries/1?actorId=1`
   - 変更先には「対応中」だけが表示される
-  - 「対応中」に戻すと `closed_at` が `null` になる（`http://localhost:3000/api/inquiries/4?actorId=1` のJSONで確認する）
+  - 「対応中」に戻すと `closed_at` が `null` になる（`http://localhost:3000/inquiries/1?actorId=1` のJSONで確認する）
 
 すべての正常なステータス変更で、`updated_at` が更新され、変更履歴が1件登録されます。
 
@@ -88,10 +88,10 @@ MEMBERは、未割り当ての問い合わせを自分に割り当てる操作�
 
 ### 表示ルール
 
-- PENDING：`http://localhost:3000/inquiries/3?actorId=2`
+- PENDING：`http://localhost:3000/inquiries/1?actorId=2`
   - ステータス変更先が「対応中」だけであること
   - 優先度「低」が灰色で表示されること
-- DONE：`http://localhost:3000/inquiries/4?actorId=1`
+- DONE：`http://localhost:3000/inquiries/1?actorId=1`
   - ステータス変更先が「対応中」だけであること
   - 担当者変更ボタンが非活性であること
 - 変更履歴が0件の場合、「変更履歴はありません」と表示されること
@@ -139,7 +139,7 @@ MEMBERは、未割り当ての問い合わせを自分に割り当てる操作�
 
 ### 6-1. 実装前に判断に迷った箇所はありましたか
 
-<!-- 判断に迷った点と、仕様書の不足箇所を記入してください。 -->
+<>
 
 ### 6-2. 最初のAIプロンプトで伝え忘れた要件
 
