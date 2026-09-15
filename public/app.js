@@ -64,8 +64,9 @@ async function request(url, options = {}) {
 function renderStatus() {
   elements.currentStatus.textContent = STATUS_LABELS[detail.inquiry.status];
   elements.statusOptions.replaceChildren();
-  elements.statusSection.hidden = detail.allowedTransitions.length === 0;
-  detail.allowedTransitions.forEach((status, index) => {
+  const displayTransitions = detail.displayTransitions ?? detail.allowedTransitions;
+  elements.statusSection.hidden = displayTransitions.length === 0;
+  displayTransitions.forEach((status, index) => {
     const wrapper = document.createElement("div");
     wrapper.className = "radio-option";
     const input = document.createElement("input");
@@ -195,4 +196,3 @@ elements.assigneeForm.addEventListener("submit", async (event) => {
 });
 
 load();
-

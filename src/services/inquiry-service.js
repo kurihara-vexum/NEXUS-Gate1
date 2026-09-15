@@ -1,5 +1,5 @@
 import { assertAssigneeChangeAllowed } from "../domain/assignee-policy.js";
-import { canTransition, getAllowedTransitions, statusLabel } from "../domain/status.js";
+import { canTransition, getAllowedTransitions, getDisplayTransitions, statusLabel } from "../domain/status.js";
 import { BusinessError, MESSAGES } from "../domain/messages.js";
 
 function nowAfter(previous) {
@@ -79,6 +79,7 @@ export function getInquiryDetail(db, inquiryId, actorId) {
     users,
     histories,
     allowedTransitions: getAllowedTransitions(inquiry.status),
+    displayTransitions: getDisplayTransitions(inquiry.status),
   };
 }
 
@@ -176,4 +177,3 @@ export function changeAssignee(db, { inquiryId, actorId, assigneeId, expectedUpd
     };
   });
 }
-

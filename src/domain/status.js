@@ -16,6 +16,13 @@ export function getAllowedTransitions(currentStatus) {
   return ALLOWED_TRANSITIONS[currentStatus] ?? [];
 }
 
+// PENDING -> DONE is deliberately shown as an error-verification path.
+// The server-side transition policy remains unchanged and rejects the update.
+export function getDisplayTransitions(currentStatus) {
+  if (currentStatus === "PENDING") return ["IN_PROGRESS", "DONE"];
+  return getAllowedTransitions(currentStatus);
+}
+
 export function canTransition(currentStatus, nextStatus) {
   return getAllowedTransitions(currentStatus).includes(nextStatus);
 }
@@ -23,4 +30,3 @@ export function canTransition(currentStatus, nextStatus) {
 export function statusLabel(status) {
   return STATUSES[status]?.label ?? status;
 }
-

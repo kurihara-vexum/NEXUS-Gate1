@@ -16,6 +16,12 @@ test("状態遷移表は仕様の5遷移だけを許可する", () => {
   assert.deepEqual(getAllowedTransitions("DONE"), ["IN_PROGRESS"]);
 });
 
+test("NEWでは対応中だけ、PENDINGではエラー確認用の完了も表示候補に含める", () => {
+  const db = setup();
+  assert.deepEqual(getInquiryDetail(db, 1, 2).displayTransitions, ["IN_PROGRESS"]);
+  assert.deepEqual(getInquiryDetail(db, 3, 2).displayTransitions, ["IN_PROGRESS", "DONE"]);
+});
+
 test("NEWからIN_PROGRESSで未割り当てなら操作者を自動設定し履歴を2件残す", () => {
   const db = setup();
   const before = getInquiryDetail(db, 1, 2);
