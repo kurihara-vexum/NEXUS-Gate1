@@ -90,7 +90,7 @@ function renderAssignee() {
   elements.currentAssignee.textContent = inquiry.assignee_name ?? "未割り当て";
   elements.assignee.replaceChildren();
 
-  if (assigneePermissions.canClear) {
+  if (assigneePermissions.showUnassignedOption) {
     const option = new Option("未割り当て", "");
     elements.assignee.add(option);
   }
@@ -102,7 +102,7 @@ function renderAssignee() {
   if (inquiry.assignee_id != null && !visibleUsers.some((user) => user.id === inquiry.assignee_id)) {
     elements.assignee.add(new Option(inquiry.assignee_name, inquiry.assignee_id));
   }
-  elements.assignee.value = inquiry.assignee_id == null && assigneePermissions.canClear
+  elements.assignee.value = inquiry.assignee_id == null && assigneePermissions.showUnassignedOption
     ? ""
     : String(inquiry.assignee_id ?? actor.id);
 

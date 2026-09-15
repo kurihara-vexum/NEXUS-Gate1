@@ -16,10 +16,10 @@ test("状態遷移表は仕様の5遷移だけを許可する", () => {
   assert.deepEqual(getAllowedTransitions("DONE"), ["IN_PROGRESS"]);
 });
 
-test("NEWとPENDINGではエラー確認用の完了も表示候補に含める", () => {
+test("NEWでは完了も表示するがPENDINGでは許可された対応中だけを表示する", () => {
   const db = setup();
   assert.deepEqual(getInquiryDetail(db, 1, 2).displayTransitions, ["IN_PROGRESS", "DONE"]);
-  assert.deepEqual(getInquiryDetail(db, 3, 2).displayTransitions, ["IN_PROGRESS", "DONE"]);
+  assert.deepEqual(getInquiryDetail(db, 3, 2).displayTransitions, ["IN_PROGRESS"]);
 });
 
 test("担当者操作権限をロール・状態・現在担当者に応じて返す", () => {
@@ -28,6 +28,7 @@ test("担当者操作権限をロール・状態・現在担当者に応じて�
   assert.equal(memberNew.canChange, true);
   assert.deepEqual(memberNew.allowedUserIds, [2]);
   assert.equal(memberNew.canClear, false);
+  assert.equal(memberNew.showUnassignedOption, false);
 
   const memberAssigned = getInquiryDetail(db, 2, 2).assigneePermissions;
   assert.equal(memberAssigned.canChange, false);
@@ -36,15 +37,24 @@ test("担当者操作権限をロール・状態・現在担当者に応じて�
   const adminNew = getInquiryDetail(db, 1, 1).assigneePermissions;
   assert.equal(adminNew.canChange, true);
   assert.equal(adminNew.canClear, true);
+  assert.equal(adminNew.showUnassignedOption, true);
   assert.equal(adminNew.allowedUserIds, null);
 
   const adminInProgress = getInquiryDetail(db, 2, 1).assigneePermissions;
   assert.equal(adminInProgress.canChange, true);
   assert.equal(adminInProgress.canClear, false);
+  assert.equal(adminInProgress.showUnassignedOption, true);
 
   const adminDone = getInquiryDetail(db, 4, 1).assigneePermissions;
   assert.equal(adminDone.canChange, false);
+  assert.equal(adminDone.showUnassignedOption, true);
   assert.equal(adminDone.guidance, MESSAGES.doneAssignee);
+});
+
+test("有効な担当者候補を日本語照合順で返す", () => {
+  const db = setup();
+  const detail = getInquiryDetail(db, 1, 1);
+  assert.deepEqual(detail.users.map((user) => user.name), ["管理 太郎", "佐藤 花子", "鈴木 一郎"]);
 });
 
 test("NEWからIN_PROGRESSで未割り当てなら操作者を自動設定し履歴を2件残す", () => {

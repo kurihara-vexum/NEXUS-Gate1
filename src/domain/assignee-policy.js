@@ -5,6 +5,7 @@ export function getAssigneePermissions({ inquiry, actor }) {
     return {
       canChange: false,
       canClear: false,
+      showUnassignedOption: actor.role === "ADMIN",
       allowedUserIds: [],
       guidance: MESSAGES.doneAssignee,
     };
@@ -15,6 +16,7 @@ export function getAssigneePermissions({ inquiry, actor }) {
     return {
       canChange: canAssignSelf,
       canClear: false,
+      showUnassignedOption: false,
       allowedUserIds: canAssignSelf ? [actor.id] : [],
       guidance: canAssignSelf ? null : "担当者の変更は管理者に依頼してください",
     };
@@ -23,6 +25,7 @@ export function getAssigneePermissions({ inquiry, actor }) {
   return {
     canChange: true,
     canClear: inquiry.status === "NEW",
+    showUnassignedOption: true,
     allowedUserIds: null,
     guidance: null,
   };
