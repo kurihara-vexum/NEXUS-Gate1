@@ -95,6 +95,7 @@ select { height: 44px; padding: 0 12px; }
 textarea:focus, select:focus { outline: 3px solid rgba(23, 61, 99, .14); border-color: var(--navy); }
 
 .form-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; color: var(--muted); font-size: 12px; }
+.form-footer .over-limit { color: var(--red); font-weight: 800; }
 .align-right { justify-content: flex-end; }
 .button { min-height: 42px; padding: 0 18px; border: 0; border-radius: 8px; font: 700 14px/1 inherit; cursor: pointer; }
 .button.primary { background: var(--navy); color: #fff; }

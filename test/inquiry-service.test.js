@@ -194,6 +194,19 @@ test("コメントが201文字なら拒否する", () => {
   );
 });
 
+test("コメントが200文字ならステータス変更できる", () => {
+  const db = setup();
+  const before = getInquiryDetail(db, 1, 2);
+  const result = changeStatus(db, {
+    inquiryId: 1,
+    actorId: 2,
+    nextStatus: "IN_PROGRESS",
+    comment: "あ".repeat(200),
+    expectedUpdatedAt: before.inquiry.updated_at,
+  });
+  assert.equal(result.message, "ステータスを「対応中」に変更しました。");
+});
+
 test("updated_atが一致しない更新を拒否する", () => {
   const db = setup();
   assert.throws(
