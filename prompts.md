@@ -17,3 +17,5 @@
 > V-01〜V-07の表示ルールを追加実装。PENDINGでは完了を選べないようにし、最後はMEMBERとADMINの2つのURLを用意する。
 
 > ステータス変更に伴う付随処理を追加実装。NEW → IN_PROGRESSの自動担当者設定、DONE到達時のclosed_at設定、DONE → IN_PROGRESSのclosed_atクリア、全遷移の履歴登録とupdated_at更新。
+
+> 2.8の処理結果メッセージ9種類を、句読点まで完全一致で追加実装する。

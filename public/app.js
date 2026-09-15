@@ -171,7 +171,10 @@ async function load() {
 }
 
 elements.comment.addEventListener("input", () => {
-  elements.commentCount.textContent = `${Array.from(elements.comment.value).length} / 200`;
+  const length = Array.from(elements.comment.value).length;
+  elements.commentCount.textContent = `${length} / 200`;
+  elements.commentCount.classList.toggle("over-limit", length > 200);
+  elements.comment.setAttribute("aria-invalid", String(length > 200));
 });
 
 elements.statusForm.addEventListener("submit", async (event) => {
@@ -185,6 +188,8 @@ elements.statusForm.addEventListener("submit", async (event) => {
     await load();
     elements.comment.value = "";
     elements.commentCount.textContent = "0 / 200";
+    elements.commentCount.classList.remove("over-limit");
+    elements.comment.setAttribute("aria-invalid", "false");
     showMessage(result.message, "success");
   } catch (error) {
     showMessage(error.message, "error");
