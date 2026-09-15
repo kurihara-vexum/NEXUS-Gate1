@@ -4,14 +4,23 @@
 
 ## 1. 起動手順
 
-### 動作環境
+以下の操作は、2つの確認用URLを開くPCのターミナルで行います。
+
+### 事前に必要なもの
 
 - Node.js 22.5以上（`node:sqlite`を使用）
 - npm（Node.jsに同梱）
 
-外部パッケージは使用していません。
+インストール済みか、次のコマンドで確認します。
 
-### 環境構築コマンド
+```bash
+node --version
+npm --version
+```
+
+### 初回のみ：環境構築
+
+まだこのリポジトリを取得していない場合は、次のコマンドを順番に実行します。
 
 ```bash
 git clone https://github.com/kurihara-vexum/NEXUS-Gate1.git
@@ -19,22 +28,36 @@ cd NEXUS-Gate1
 npm install
 ```
 
-### 起動コマンド
+外部パッケージは使用していませんが、`npm install`でプロジェクトのnpm環境を確認できます。すでにリポジトリを取得済みの場合、`git clone`は不要です。ターミナルで取得済みの`NEXUS-Gate1`フォルダへ移動してください。
+
+### アプリを起動する
+
+`NEXUS-Gate1`フォルダ内で、次のコマンドを実行します。
 
 ```bash
 npm start
 ```
 
-起動後、次のURLをブラウザで開きます。
+ターミナルに次のように表示されたら起動完了です。
 
-- MEMBER：http://localhost:3000/inquiries/1?actorId=2
-- ADMIN：http://localhost:3000/inquiries/1?actorId=1
+```text
+NEXUS inquiry management: http://localhost:3000/inquiries/1
+```
+
+`npm start`を実行したターミナルは閉じずに、そのまま次の2つのURLをブラウザで開きます。
+
+- MEMBER（一般担当者）：http://localhost:3000/inquiries/1?actorId=2
+- ADMIN（管理者）：http://localhost:3000/inquiries/1?actorId=1
+
+この2つのURLは、アプリを起動した同じPCでのみ開けます。サーバーを停止すると開けなくなります。終了するときは、`npm start`を実行しているターミナルで `Ctrl + C` を押します。
 
 初回起動時にSQLiteデータベース `data/nexus.sqlite` と確認用データが自動作成されます。`actorId=2` はMEMBERの佐藤 花子、`actorId=1` はADMINの山田 太郎として動作します。
 
 画面右上の「初期状態に戻す」は、要件定義にはない動作確認用の補助機能です。押すと、操作中の権限にかかわらず、問い合わせ・担当者・変更履歴を確認用の初期データへ戻します。開いている同一オリジンの別タブにもリセットが通知されます。
 
 ### 自動テスト
+
+`NEXUS-Gate1`フォルダ内で次のコマンドを実行します。
 
 ```bash
 npm test
