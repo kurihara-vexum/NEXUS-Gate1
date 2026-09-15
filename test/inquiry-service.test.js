@@ -97,6 +97,33 @@ test("IN_PROGRESSからDONEでclosed_atを設定する", () => {
   assert.ok(getInquiryDetail(db, 2, 2).inquiry.closed_at);
 });
 
+test("許可された全ての遷移でupdated_atを更新しステータス履歴を1件登録する", () => {
+  const cases = [
+    { inquiryId: 1, nextStatus: "IN_PROGRESS" },
+    { inquiryId: 2, nextStatus: "PENDING" },
+    { inquiryId: 2, nextStatus: "DONE" },
+    { inquiryId: 3, nextStatus: "IN_PROGRESS" },
+    { inquiryId: 4, nextStatus: "IN_PROGRESS" },
+  ];
+
+  for (const { inquiryId, nextStatus } of cases) {
+    const db = setup();
+    const before = getInquiryDetail(db, inquiryId, 2);
+    changeStatus(db, {
+      inquiryId,
+      actorId: 2,
+      nextStatus,
+      expectedUpdatedAt: before.inquiry.updated_at,
+    });
+    const after = getInquiryDetail(db, inquiryId, 2);
+    const statusHistories = after.histories.filter((history) => history.field_name === "status");
+    assert.notEqual(after.inquiry.updated_at, before.inquiry.updated_at);
+    assert.equal(statusHistories.length, 1);
+    assert.equal(statusHistories[0].old_value, before.inquiry.status);
+    assert.equal(statusHistories[0].new_value, nextStatus);
+  }
+});
+
 test("MEMBERは未割り当ての問い合わせを自分に割り当てられる", () => {
   const db = setup();
   const before = getInquiryDetail(db, 1, 2);
